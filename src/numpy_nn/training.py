@@ -38,11 +38,22 @@ def train(net, loss_fn, x_train, y_train, x_val, y_val,
             net.step(lr)
 
         for split, x, y in (("train", x_train, y_train), ("val", x_val, y_val)):
-            logits = net.forward(x)
-            history[f"{split}_loss"].append(loss_fn.forward(logits, y))
-            history[f"{split}_acc"].append(accuracy(y, np.argmax(logits, axis=1)))
+            loss, acc = evaluate(net, loss_fn, x, y)
+            history[f"{split}_loss"].append(loss)
+            history[f"{split}_acc"].append(acc)
 
     return history
+
+
+def evaluate(net, loss_fn, x, y, batch_size=1000):
+    """Mean loss and accuracy over a dataset, computed in batches to limit memory use."""
+    total_loss, correct = 0.0, 0
+    for start in range(0, len(x), batch_size):
+        xb, yb = x[start:start + batch_size], y[start:start + batch_size]
+        logits = net.forward(xb)
+        total_loss += loss_fn.forward(logits, yb) * len(yb)
+        correct += np.sum(np.argmax(logits, axis=1) == yb)
+    return total_loss / len(x), correct / len(x)
 
 
 def confusion_matrix(y_true, y_pred, n_classes):
