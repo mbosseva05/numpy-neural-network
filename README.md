@@ -9,7 +9,7 @@ On the scikit-learn handwritten digits dataset (8×8 images, 10 classes), a 3-la
 ## Quick start
 
 ```bash
-git clone https://github.com/mbosseva/numpy-neural-network.git
+git clone https://github.com/mbosseva05/numpy-neural-network.git
 cd numpy-neural-network
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[examples,dev]"
